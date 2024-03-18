@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, Text, View, StyleSheet, Pressable } from "react-native";
 import { Pedometer } from 'expo-sensors';
 import * as Location from 'expo-location';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const StepTracker = () => {
   const [isAvailable, setIsAvailable] = useState(false);
@@ -10,6 +11,16 @@ const StepTracker = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [isCounting, setIsCounting] = useState(false);
   const [done, setDone] = useState(false);
+
+  const StoreLocation = async (key: string,value: object) => {
+    try{
+      const val = JSON.stringify(value);
+      await AsyncStorage.setItem(key,val)
+    }catch(e: any){
+      Alert.alert(e.message)
+    }
+    
+  };
 
   useEffect(() => {
     (async () => {
@@ -22,6 +33,12 @@ const StepTracker = () => {
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
     })();
+
+    if (location ) {
+      const send = setInterval(() => {
+        StoreLocation('polyline', location);
+      }, 10000);
+    }
   }, []);
 
   useEffect(() => {
