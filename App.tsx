@@ -1,6 +1,6 @@
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useState } from 'react';
 import {
+  Pressable,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -13,9 +13,18 @@ import StepTracker from './StepTracker';
 
 
 function App(){
+  const [show, Setshow] = useState(false);
   return (
     <View>
-      <StepTracker/>
+      {show? <StepTracker/> : 
+      <View>
+        <Pressable onPress={() =>  Setshow(true)}>
+          <Text>Step</Text>
+          <Text>Tracker</Text>
+          <Text>Click to continue...</Text>
+        </Pressable>
+      </View>
+      }
     </View>
   );
 }
